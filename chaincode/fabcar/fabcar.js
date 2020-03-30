@@ -9,7 +9,7 @@ class test extends Contract {
 
   async createLandRecord(ctx, landId, ownerName, ownerId, landStatus, saleDeedId) {
     let cid = new ClientIdentity(ctx.stub);
-    if (cid.assertAttributeValue('firstName', 'BOR')) {
+    if (cid.assertAttributeValue('invoker', 'BOR')) {
       console.info('============= START : Create LandRecord ===========');
 
       const Land = {
@@ -30,7 +30,7 @@ class test extends Contract {
 
   async getLandRecord(ctx, landId) {
     let cid = new ClientIdentity(ctx.stub);
-    if (cid.assertAttributeValue('firstName', 'BOR')) {
+    if (cid.assertAttributeValue('invoker', 'BOR')) {
       const landAsBytes = await ctx.stub.getState(landId);
       if (!landAsBytes || landAsBytes.length === 0) {
         throw new Error(`${landId} does not exist`);
@@ -46,7 +46,7 @@ class test extends Contract {
   async getLandRecordStatus(ctx, landId) {
 
     let cid = new ClientIdentity(ctx.stub);
-    if (cid.assertAttributeValue('firstName', 'DOSR')) {
+    if (cid.assertAttributeValue('invoker', 'DOSR')) {
       const landAsBytes = JSON.parse(await ctx.stub.getState(landId));
       if (!landAsBytes || landAsBytes.length === 0) {
         throw new Error(`${landId} does not exist`);
