@@ -12,10 +12,9 @@ const {
 const path = require('path');
 const ccpPath = path.resolve(__dirname, '..', 'network', 'connection-org1.json');
 
-async function main(username) {
-    // var x = process.argv.slice(2);
-    // var username = x[0]
-    console.log(username);
+async function main(username, invoker) {  
+    console.log(username , invoker )
+    
     try {
 
         // Create a new file system based wallet for managing identities.
@@ -61,23 +60,24 @@ async function main(username) {
             enrollmentID: username,
             role: 'client',
             attrs: [{
-                name: 'firstName',
-                value: 'mm',
+                name: 'invoker',
+                value: `${invoker}`,
                 ecert: true
             }]
+            
         }, adminIdentity);
 
         const enrollment = await ca.enroll({
             enrollmentID: username,
             enrollmentSecret: secret,
-            attr_reqs: [{ name: 'firstName', optional: false }]
+            attr_reqs: [{ name: 'invoker', optional: false }]
         });
         const userIdentity = X509WalletMixin.createIdentity('Org1MSP', enrollment.certificate, enrollment.key.toBytes());
         await wallet.import(username, userIdentity);
-        console.log('Successfully registered and enrolled admin user "user1" and imported it into the wallet');
+        console.log('Successfully registered and enrolled user with username ' + username + ' with invoker type ' +  invoker  + ' and imported it into the wallet');
 
     } catch (error) {
-        console.error(`Failed to register user "user1": ${error}`);
+        console.error(`Failed to register user "user": ${error}`);
         process.exit(1);
     }
 }
