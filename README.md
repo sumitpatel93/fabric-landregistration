@@ -9,7 +9,11 @@
 4. cd fabric-landregistration/nodejs
 5. npm i, to install the necessary node_modules for the nodejs.
 6. Make a new folder with name "bin" in the home directory.
-7. Copy all the binaries from the fabric-sample github repo.This folder will contain these following binaries.
+7. Download the bin by calling running this curl command 
+   ```bash
+   curl https://raw.githubusercontent.com/hyperledger/fabric/master/scripts/bootstrap.sh | bash -s -- 1.4.0 1.4.0 -d -s
+   ```
+8. This folder will contain these following binaries.
 a. configtxgen
 b. configtxlator
 c. cryptogen
@@ -20,7 +24,7 @@ g. idemixgen
 h. orderer
 i. peer
 
-8. Now you have setup all the binaries and necessary node_modules for running this network.After these steps your folder structure will look something like this.
+8. Now you have setup all the binaries and necessary node_modules for running this network. After these steps your folder structure will look something like this.
 
 ![Screenshot from 2020-03-30 15-06-49](https://user-images.githubusercontent.com/15656052/77898634-0fde2180-7299-11ea-9257-458672d4e210.png)
 
