@@ -12,7 +12,11 @@
    npm install
    ```
 3. Make a new folder with name **bin** in the home directory.
-4. Copy all the binaries from the fabric-sample github repo.This folder will contain these following binaries.
+4. You can download the required binaries for bin folder by running this command
+   ```bash
+   curl https://raw.githubusercontent.com/hyperledger/fabric/master/scripts/bootstrap.sh | bash -s -- 1.4.0 1.4.0 -d -s
+   ```
+5.The folder will container below mentioned binaries, so now your bin folder is  updated with the required binaries for the network.   
    a. configtxgen
    b. configtxlator
    c. cryptogen
@@ -23,7 +27,7 @@
    h. orderer
    i. peer
 
-8. Now you have setup all the binaries and necessary node_modules for running this network. After these steps your folder structure will look something like this.
+5. Now you have setup all the binaries and necessary node_modules for running this network. After these steps your folder structure will look something like this.
 
 ![Screenshot from 2020-03-30 15-06-49](https://user-images.githubusercontent.com/15656052/77898634-0fde2180-7299-11ea-9257-458672d4e210.png)
 
