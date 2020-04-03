@@ -41,7 +41,7 @@
    
 ### Steps to run the REST server
 
-For running REST server, please go through this 
+For running REST server, please go through [this](https://github.com/sumitpatel93/fabric-landregistration/blob/master/backend/README.md)
 
 
 
