@@ -91,5 +91,35 @@ router.post('/getLandRecord', async (req, res) => {
     }
 });
 
+router.post('/getLandRecordStatus', async (req, res) => {
+    const landId = req.query.landId
+    try {
+        let response = await querylandRecord.getLandRecordStatus(landId);
+        res.status(200).json({
+            Body: response
+        });
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({
+            Body: "Error"
+        });
+    }
+});
+
+router.post('/getSaleDeed', async (req, res) => {
+    const saleDeedId = req.query.saleDeedId
+    try {
+        let response = await querylandRecord.getSaleDeed(saleDeedId);
+        res.status(200).json({
+            Body: response
+        });
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({
+            Body: "Error"
+        });
+    }
+});
+
 
 module.exports = router;

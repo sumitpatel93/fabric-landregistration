@@ -32,7 +32,7 @@
 }
 ```
 3. To get the status for any LandRecord status
-   ```POST http://localhost:3000/getLandRecord```
+   ```POST http://localhost:3000/getLandRecordStatus```
 
 ```javascript
 {	
