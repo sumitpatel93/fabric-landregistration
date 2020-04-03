@@ -16,7 +16,7 @@
    ```bash
    curl https://raw.githubusercontent.com/hyperledger/fabric/master/scripts/bootstrap.sh | bash -s -- 1.4.0 1.4.0 -d -s
    ```
-5.The folder will container below mentioned binaries, so now your bin folder is  updated with the required binaries for the network.   
+5. The folder will container below mentioned binaries, so now your bin folder is  updated with the required binaries for the network.   
    a. configtxgen
    b. configtxlator
    c. cryptogen
@@ -27,7 +27,7 @@
    h. orderer
    i. peer
 
-5. Now you have setup all the binaries and necessary node_modules for running this network. After these steps your folder structure will look something like this.
+6. Now you have setup all the binaries and necessary node_modules for running this network. After these steps your folder structure will look something like this.
 
 ![Screenshot from 2020-03-30 15-06-49](https://user-images.githubusercontent.com/15656052/77898634-0fde2180-7299-11ea-9257-458672d4e210.png)
 
@@ -39,14 +39,11 @@
 4. Once you can successfully ran this script, you can cross check whether the chaincode is instantiated or not in the docker container.
 5. Now you are up and running the network with the chaicode instantiated.
    
-### Steps to run the REST server.
+### Steps to run the REST server
 
-1. Go inside the backend folder
-2. Run the command `nodemon server.js` to start the REST server for interacting with the chaincode and network.
-3. After this run /enrollAdmin api from postman, this will successfully enroll the admin to the network.
-4. Run /registerUser from postman to register user.
-5. Once the admin and user are registered succesfully , then we can register the new land record by calling /createlandRecord by passing the required parameters.
-6. After the successfull registration of land, the land can be queried by calling /getLandRecord.
+For running REST server, please go through this 
+
+
 
 
 
