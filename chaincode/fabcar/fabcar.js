@@ -44,7 +44,6 @@ class test extends Contract {
   }
 
   async getLandRecordStatus(ctx, landId) {
-
     let cid = new ClientIdentity(ctx.stub);
     if (cid.assertAttributeValue('invoker', 'DOSR')) {
       const landAsBytes = JSON.parse(await ctx.stub.getState(landId));
@@ -58,91 +57,124 @@ class test extends Contract {
     }
   }
 
+  async createSaleDeed(ctx, saleDeedId, landId, sellerId, sellerName, buyerId, buyerName) {
+
+    let cid = new ClientIdentity(ctx.stub);
+    if (cid.assertAttributeValue('invoker', 'DOSR')) {
+
+      const SaleDeed = {
+        saleDeedId,
+        landId,
+        sellerId,
+        sellerName,
+        buyerId,
+        buyerName
+      };
 
 
-  async createSaleDeed(
-    ctx,
-    saleDeedId,
-    landId,
-    sellerId,
-    sellerName,
-    buyerId,
-    buyerName
-  ) {
-    console.info("============= START : Create SaleDeed ===========");
-    const SaleDeed = {
-      saleDeedId,
-      landId,
-      sellerId,
-      sellerName,
-      buyerId,
-      buyerName
-    };
+      let completes_saledeed = await ctx.stub.putState(saleDeedId, Buffer.from(JSON.stringify(SaleDeed)));
 
-    await ctx.stub.putState(saleDeedId, Buffer.from(JSON.stringify(SaleDeed)));
-    console.info("============= END : Create Sale Deed ===========");
+      //Get land record and check for land record status
+      const landStatus = JSON.parse(await this.getLandRecordStatus(ctx, landId));
+      if (landStatus == "NEW") {
+        const fetched_landRecord = JSON.parse(await this.getLandRecord(ctx, landId));
 
+        let landToTransfer = fetched_landRecord
+        landToTransfer.landStatus = "REGISTRATION_DONE"
+        landToTransfer.saleDeedId = saleDeedId
+
+        //update the land record status after sale deed created
+        let landAsBytes = Buffer.from(JSON.stringify(landToTransfer));
+        await ctx.stub.putState(landId, landAsBytes)
+        return shim.success()
+      } else {
+        throw new Error('Not a valid user');
+      }
+    }
   }
 
   async getSaleDeed(ctx, saleDeedId) {
-    const saleDeedAsBytes = JSON.parse(await ctx.stub.getState(saleDeedId));
-    if (!saleDeedAsBytes || saleDeedAsBytes.length === 0) {
-      throw new Error(`${saleDeedId} does not exist`);
+    let cid = new ClientIdentity(ctx.stub);
+    if (cid.assertAttributeValue('invoker', 'DOSR')) {
+
+      const saleDeedAsBytes = JSON.parse(await ctx.stub.getState(saleDeedId));
+      if (!saleDeedAsBytes || saleDeedAsBytes.length === 0) {
+        throw new Error(`${saleDeedId} does not exist`);
+      }
+      var data = JSON.stringify(saleDeedAsBytes)
+      return data;
+    } else {
+      throw new Error('Not a valid user');
     }
-    var data = JSON.stringify(saleDeedAsBytes)
-    return data;
   }
 
-
-  async getLandRecordLifeCycle(ctx, landId) {
-    let resultsIterator = await ctx.stub.getHistoryForKey(landId);
-    console.log(resultsIterator);
-    return JSON.stringify(getHistoryForKey);
-  }
 
 
   async getBuyerFromSaleDeed(ctx, saleDeedId) {
-    const saleDeedAsBytes = JSON.parse(await ctx.stub.getState(saleDeedId));
-    if (!saleDeedAsBytes || saleDeedAsBytes.length === 0) {
-      throw new Error(`${saleDeedId} does not exist`);
+    let cid = new ClientIdentity(ctx.stub);
+    if (cid.assertAttributeValue('invoker', 'DOSR')) {
+
+      const saleDeedAsBytes = JSON.parse(await ctx.stub.getState(saleDeedId));
+      if (!saleDeedAsBytes || saleDeedAsBytes.length === 0) {
+        throw new Error(`${saleDeedId} does not exist`);
+      }
+      var data = JSON.stringify(saleDeedAsBytes.buyerName);
+      return data;
+    } else {
+      throw new Error('Not a valid user');
     }
-    var data = JSON.stringify(saleDeedAsBytes.buyerName);
-    return data;
   }
-}
 
-//TOBE MODIFIED
-// async mutateLandRecord(ctx, args) {
-// let cid = new ClientIdentity(ctx.stub);
-// if (cid.assertAttributeValue('userType', 'BOR')) {
+  async getLandRecordLifeCycle(ctx, landId) {
+    let cid = new ClientIdentity(ctx.stub);
+    if (cid.assertAttributeValue('invoker', 'DOSR')) {
 
-// } else {
-//     throw new Error('Not a valid user'); 
-// }
+      let resultsIterator = await ctx.stub.getHistoryForKey(landId);
+      console.log(resultsIterator);
+      return JSON.stringify(getHistoryForKey);
+    } else {
+      throw new Error('Not a valid user');
+    }
+  }
 
-//     if ( args.length != 2) {
-//         throw new Error('Incorrect number of arguments , expected number of arguments is 2');
-//     }
+  async mutateLandRecord(ctx, landId, ) {
+      let cid = new ClientIdentity(ctx.stub);
+      if (cid.assertAttributeValue('invoker', 'BOR')) {
 
-//     let landId = args[0];
-//     let newOwnerName = args[1];
+        let landresults = JSON.parse(await ctx.stub.getState(landId));
+
+        if (!landresults) {
+          return new Error(`${landId} Failed to get land record`);
+        } else if (landresults === null) {
+          return shim.Error('Land record does not exist')
+
+        } else {
+          // return landresults
+          const landStatus = JSON.parse(await this.getLandRecordStatus(ctx, landId));
+          console.log(landStatus);
+          if (landStatus == "REGISTRATION_DONE") {
+
+            const fetched_landRecord = JSON.parse(await this.getLandRecord(ctx, landId));
+            let landToTransfer = fetched_landRecord
+            let saleDeedId = fetched_landRecord.saleDeedId
+            console.log(fetched_landRecord)
+            const buyerName = JSON.parse(await this.getBuyerFromSaleDeed(ctx, saleDeedId));
+            landToTransfer.ownerName = buyerName
+            landToTransfer.landStatus = "MUTATION_DONE"
+            console.log(landToTransfer)
+            let landAsBytes = Buffer.from(JSON.stringify(landToTransfer));
+            await ctx.stub.putState(landId, landAsBytes)
+            return shim.success()
 
 
-//     let landresults = await ctx.stub.getState(landId);
-//     console.log(landresults);
+          } else {
+            throw new Error('Not a valid user');
 
-//     if(!landresults ){
-//         return new Error (`${landId} Failed to get land record`);
-//     } else if ( landresults === null ){
-//         return  shim.Error('Land record does not exist')
-
-//     }
-
-//     landToTransfer = {};
-//     landRecordStatus = landToTransfer.landRecordStatus
-//     saleDeedId = landToTransfer.saleDeedId
-
-// }
+          }
 
 
-module.exports = test;
+        }
+      }
+    }
+  }
+      module.exports = test;
