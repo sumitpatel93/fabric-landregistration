@@ -39,6 +39,11 @@
     "landId":"123"    
 }
 ```
+```
+On createLand Record : NEW
+On createSaleDeed : REGISTRATION_DONE
+On mutateland : MUTATION_DONE
+```
 
 4. To get the sale Deed 
    ```POST http://localhost:3000/getSaleDeed```
@@ -48,4 +53,35 @@
     "saleDeedId":"123"    
 }
 ```
+5. To create sale deed
+    ```POST http://localhost:3000/getSaleDeed```
 
+```javascript
+{	
+    "saleDeedId":"123"  ,
+    "landId":"1",
+    "sellerId":"11",
+    "sellerName":"Sumit",
+    "buyerId":"22",
+    "buyerName" : "Rohit"  
+}
+```
+
+```
+{"saleDeedId":"2","landId":"1","sellerId":"55","sellerName":"SELLERNAME","buyerId":"555","buyerName":"ROHIT"}
+```
+
+**landId should be same as for the landcreated
+
+1. To mutate the LandRecord 
+   ```POST http://localhost:3000/mutateLandRecord```
+
+```javascript
+{	
+    "landId":"123"    
+}
+```
+
+```
+
+{"landId":"1","ownerName":"ROHIT","ownerId":"1","landStatus":"MUTATION_DONE","saleDeedId":"2"} ```
