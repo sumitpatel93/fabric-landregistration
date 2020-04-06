@@ -85,3 +85,7 @@ On mutateland : MUTATION_DONE
 ```
 
 {"landId":"1","ownerName":"ROHIT","ownerId":"1","landStatus":"MUTATION_DONE","saleDeedId":"2"} ```
+
+
+**POSTMAN Collection
+https://documenter.getpostman.com/view/2804921/SzYW2zvS?version=latest
