@@ -38,14 +38,14 @@ async function createSaleDeed( saleDeedId ,landId, sellerId , sellerName , buyer
 
     try {            
            
-        const userExists = await wallet.exists("user555");
+        const userExists = await wallet.exists("user1");
         if (!userExists) {
-            console.log('An identity for the user "user555" does not exist in the wallet');
+            console.log('An identity for the user "user1" does not exist in the wallet');
             console.log('Run the registerUser.js application before retrying');
             return;
         }        
         const gateway = new Gateway();
-        await gateway.connect(ccpPath, { wallet, identity: 'user555', discovery: { enabled: true, asLocalhost: true } });      
+        await gateway.connect(ccpPath, { wallet, identity: 'user1', discovery: { enabled: true, asLocalhost: true } });      
         const network = await gateway.getNetwork('mychannel');        
         const contract = network.getContract('fabcarv1');     
         await contract.submitTransaction('createSaleDeed',saleDeedId , landId , sellerId ,sellerName , buyerId, buyerName );
@@ -57,5 +57,29 @@ async function createSaleDeed( saleDeedId ,landId, sellerId , sellerName , buyer
     }
 }
 
+async function mutateLandRecord( landId  ) {
+
+    try {            
+           
+        const userExists = await wallet.exists("user1");
+        if (!userExists) {
+            console.log('An identity for the user "user1" does not exist in the wallet');
+            console.log('Run the registerUser.js application before retrying');
+            return;
+        }        
+        const gateway = new Gateway();
+        await gateway.connect(ccpPath, { wallet, identity: 'user1', discovery: { enabled: true, asLocalhost: true } });      
+        const network = await gateway.getNetwork('mychannel');        
+        const contract = network.getContract('fabcarv1');     
+        await contract.submitTransaction('mutateLandRecord',landId );
+        console.log('mutateLandRecord Transaction has been submitted');        
+        await gateway.disconnect();
+    } catch (error) {
+        console.error(`Failed to submit transaction: ${error}`);
+        process.exit(1);
+    }
+}
+
 module.exports.main = main;
-module.exports.createSaleDeed = createSaleDeed;      
+module.exports.createSaleDeed = createSaleDeed;    
+module.exports.mutateLandRecord = mutateLandRecord;  
