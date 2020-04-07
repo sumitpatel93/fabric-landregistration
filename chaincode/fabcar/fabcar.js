@@ -127,11 +127,24 @@ class test extends Contract {
 
   async getLandRecordLifeCycle(ctx, landId) {
     let cid = new ClientIdentity(ctx.stub);
-    if (cid.assertAttributeValue('invoker', 'DOSR')) {
-
-      let resultsIterator = await ctx.stub.getHistoryForKey(landId);
-      console.log(resultsIterator);
-      return JSON.stringify(getHistoryForKey);
+    if (cid.assertAttributeValue('invoker', 'DOSR')) {     
+        
+          console.info('getting history for key: ' + landId);
+          let iterator = await ctx.stub.getHistoryForKey(landId);
+          let result = [];
+          let res = await iterator.next();
+          while (!res.done) {
+              if (res.value) {
+                  console.info(`found state update with value: ${res.value.value.toString('utf8')}`);
+                  const obj = JSON.parse(res.value.value.toString('utf8'));
+                  result.push(obj);
+              }
+              res = await iterator.next();
+          }
+          await iterator.close();
+          return result;
+       
+      
     } else {
       throw new Error('Not a valid user');
     }
