@@ -17,11 +17,18 @@ class test extends Contract {
         ownerName,
         ownerId,
         landStatus,
-        saleDeedId
+        saleDeedId,
+        
       };
 
       await ctx.stub.putState(landId, Buffer.from(JSON.stringify(Land)));
+      let _time = ctx.stub.getTxTimestamp();
+      let ActualTime = _time.seconds.low
+      let _txId = ctx.stub.getTxID()
       console.info('============= END : Create LandRecord ===========');
+      console.info("Time ==>",  ActualTime);
+      console.info("Transaction Id ===>" ,_txId)
+      
     } else {
       throw new Error('Not a valid user');
     }
